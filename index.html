@@ -2,16 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Find Your Seat | The Wedding</title>
     <style>
-        /* --- CSS STYLES --- */
         :root {
-            --bg-color: #f9f9f9;
-            --text-color: #333;
-            --accent-color: #7d8c76; /* Sage Green - Change this to match wedding theme */
-            --input-bg: #fff;
-            --font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --bg-color: #fcfcfc;
+            --text-color: #2d2d2d;
+            --accent-color: #8fa189; /* Sage Green */
+            --input-bg: #ffffff;
+            --font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
@@ -22,114 +21,179 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             min-height: 100vh;
-            padding: 20px;
+        }
+
+        /* --- HEADER & SEARCH SECTION --- */
+        .header-container {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            background: rgba(252, 252, 252, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 20px 0 15px 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            text-align: center;
         }
 
         .container {
-            text-align: center;
             max-width: 500px;
-            width: 100%;
+            width: 90%;
+            margin: 0 auto;
         }
 
         h1 {
             font-weight: 300;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
-            font-size: 2rem;
+            letter-spacing: 3px;
+            margin: 0 0 5px 0;
+            font-size: 1.6rem;
             text-transform: uppercase;
         }
 
         p.subtitle {
-            font-size: 0.9rem;
-            color: #777;
-            margin-bottom: 40px;
+            font-size: 0.85rem;
+            color: #888;
+            margin: 0 0 20px 0;
             font-style: italic;
+        }
+
+        .search-wrapper {
+            position: relative;
+            width: 100%;
         }
 
         input[type="text"] {
             width: 100%;
-            padding: 15px;
-            font-size: 1.1rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 16px 45px 16px 16px; /* Extra right padding for 'X' button */
+            font-size: 1rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
             background-color: var(--input-bg);
             outline: none;
-            transition: border-color 0.3s ease;
-            box-sizing: border-box; /* Ensures padding doesn't widen element */
+            transition: all 0.3s ease;
+            box-sizing: border-box;
         }
 
         input[type="text"]:focus {
             border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(143, 161, 137, 0.2);
         }
 
+        #clearBtn {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #eee;
+            border: none;
+            color: #999;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            font-size: 12px;
+            cursor: pointer;
+            display: none; /* Hidden by default */
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- RESULTS SECTION --- */
         #results {
-            margin-top: 30px;
             width: 100%;
+            padding-top: 20px;
+            padding-bottom: 50px;
         }
 
         .guest-card {
             background: white;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            padding: 18px 22px;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            animation: fadeIn 0.4s ease-in-out;
+            animation: slideUp 0.4s ease-out;
         }
 
         .guest-name {
-            font-weight: 600;
-            font-size: 1.1rem;
-            text-align: left;
+            font-weight: 500;
+            font-size: 1.05rem;
         }
 
         .table-number {
             background-color: var(--accent-color);
             color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            white-space: nowrap;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
         }
 
-        .no-result {
-            color: #999;
-            margin-top: 20px;
-            font-size: 0.9rem;
+        /* --- STYLED NO RESULT BOX --- */
+        .no-result-box {
+            background-color: #fff;
+            border: 1px dashed #ccc;
+            padding: 30px 20px;
+            border-radius: 12px;
+            margin-top: 30px;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
         }
 
-        @keyframes fadeIn {
+        .no-result-box p {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        .no-result-box .main-msg {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .coordinator-btn {
+            display: inline-block;
+            margin-top: 15px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent-color);
+            border-bottom: 1px solid var(--accent-color);
+            text-decoration: none;
+        }
+
+        @keyframes slideUp {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Mobile adjustments */
-        @media (max-width: 600px) {
-            h1 { font-size: 1.5rem; }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
     </style>
 </head>
 <body>
 
+    <div class="header-container">
+        <div class="container">
+            <h1>Our Wedding</h1>
+            <p class="subtitle">Find your seat</p>
+            <div class="search-wrapper">
+                <input type="text" id="searchInput" placeholder="Type your first or last name..." autocomplete="off">
+                <button id="clearBtn">&times;</button>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
-        <h1>Welcome</h1>
-        <p class="subtitle">Please find your seat below</p>
-
-        <input type="text" id="searchInput" placeholder="Type your name..." autocomplete="off">
-
         <div id="results"></div>
     </div>
 
     <script>
-        /* --- GUEST DATA --- 
-           Edit this list with your actual guests.
-           Format: { name: "Guest Name", table: "Table Number" },
-        */
         const guests = [
             { name:"Ivan Abalos", table:"Table 1"},
             { name:"Chic Abdullah", table:"Table 1"},
@@ -310,17 +374,29 @@
             { name:"Daisy Valenzuela", table:"Table 1"}
         ];
 
-        /* --- LOGIC --- */
         const searchInput = document.getElementById('searchInput');
+        const clearBtn = document.getElementById('clearBtn');
         const resultsDiv = document.getElementById('results');
 
-        searchInput.addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase().trim();
-            resultsDiv.innerHTML = ''; // Clear previous results
+        // Show/Hide Clear Button
+        searchInput.addEventListener('input', () => {
+            clearBtn.style.display = searchInput.value.length > 0 ? 'flex' : 'none';
+            performSearch();
+        });
 
-            if (query.length < 2) return; // Wait for at least 2 chars
+        clearBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            clearBtn.style.display = 'none';
+            resultsDiv.innerHTML = '';
+            searchInput.focus();
+        });
 
-            // Filter guests based on first OR last name
+        function performSearch() {
+            const query = searchInput.value.toLowerCase().trim();
+            resultsDiv.innerHTML = '';
+
+            if (query.length < 2) return;
+
             const filteredGuests = guests.filter(guest => 
                 guest.name.toLowerCase().includes(query)
             );
@@ -336,9 +412,15 @@
                     resultsDiv.appendChild(card);
                 });
             } else {
-                resultsDiv.innerHTML = '<div class="no-result">No guests found with that name.</div>';
+                resultsDiv.innerHTML = `
+                    <div class="no-result-box">
+                        <p class="main-msg">We couldn't find your name.</p>
+                        <p>Try searching for just your last name.</p>
+                        <p class="coordinator-btn">Please see the coordinator for assistance</p>
+                    </div>
+                `;
             }
-        });
+        }
     </script>
 </body>
 </html>
