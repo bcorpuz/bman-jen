@@ -397,9 +397,12 @@
 
             if (query.length < 2) return;
 
-            const filteredGuests = guests.filter(guest => 
-                guest.name.toLowerCase().includes(query)
-            );
+            const filteredGuests = guests.filter(guest => {
+                const nameParts = guest.name.toLowerCase().split(' ');
+                // This checks if any part of the name (First or Last) 
+                // STARTS with the query, instead of just containing it.
+                return nameParts.some(part => part.startsWith(query));
+            });
 
             if (filteredGuests.length > 0) {
                 filteredGuests.forEach(guest => {
