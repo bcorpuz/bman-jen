@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Your Seat | The Wedding</title>
+    <style>
+        /* --- CSS STYLES --- */
+        :root {
+            --bg-color: #f9f9f9;
+            --text-color: #333;
+            --accent-color: #7d8c76; /* Sage Green - Change this to match wedding theme */
+            --input-bg: #fff;
+            --font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            font-weight: 300;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            font-size: 2rem;
+            text-transform: uppercase;
+        }
+
+        p.subtitle {
+            font-size: 0.9rem;
+            color: #777;
+            margin-bottom: 40px;
+            font-style: italic;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: var(--input-bg);
+            outline: none;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box; /* Ensures padding doesn't widen element */
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent-color);
+        }
+
+        #results {
+            margin-top: 30px;
+            width: 100%;
+        }
+
+        .guest-card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .guest-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-align: left;
+        }
+
+        .table-number {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .no-result {
+            color: #999;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 600px) {
+            h1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Welcome</h1>
+        <p class="subtitle">Please find your seat below</p>
+
+        <input type="text" id="searchInput" placeholder="Type your name..." autocomplete="off">
+
+        <div id="results"></div>
+    </div>
+
+    <script>
+        /* --- GUEST DATA --- 
+           Edit this list with your actual guests.
+           Format: { name: "Guest Name", table: "Table Number" },
+        */
+        const guests = [
+            { name: "Harry Potter", table: "Table 1" },
+            { name: "Hermione Granger", table: "Table 1" },
+            { name: "Ron Weasley", table: "Table 2" },
+            { name: "Draco Malfoy", table: "Table 3" },
+            { name: "Albus Dumbledore", table: "Head Table" },
+            { name: "Severus Snape", table: "Table 3" },
+            { name: "Rubeus Hagrid", table: "Table 4" },
+            { name: "Luna Lovegood", table: "Table 2" },
+            { name: "Neville Longbottom", table: "Table 4" },
+            { name: "Ginny Weasley", table: "Table 1" },
+            { name: "Sirius Black", table: "Table 5" },
+            { name: "Remus Lupin", table: "Table 5" }
+        ];
+
+        /* --- LOGIC --- */
+        const searchInput = document.getElementById('searchInput');
+        const resultsDiv = document.getElementById('results');
+
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            resultsDiv.innerHTML = ''; // Clear previous results
+
+            if (query.length < 2) return; // Wait for at least 2 chars
+
+            // Filter guests based on first OR last name
+            const filteredGuests = guests.filter(guest => 
+                guest.name.toLowerCase().includes(query)
+            );
+
+            if (filteredGuests.length > 0) {
+                filteredGuests.forEach(guest => {
+                    const card = document.createElement('div');
+                    card.className = 'guest-card';
+                    card.innerHTML = `
+                        <div class="guest-name">${guest.name}</div>
+                        <div class="table-number">${guest.table}</div>
+                    `;
+                    resultsDiv.appendChild(card);
+                });
+            } else {
+                resultsDiv.innerHTML = '<div class="no-result">No guests found with that name.</div>';
+            }
+        });
+    </script>
+</body>
+</html>
